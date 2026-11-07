@@ -10,7 +10,9 @@ function add(role,text){var d=document.createElement('div');d.className='msg '+r
  if(role==='guide'){d.innerHTML='<img class="avatar" src="'+CFG.img+'" alt=""><div class="bubble">'+esc(clean(text)).split(/\n\s*\n/).map(function(p){return '<p>'+p.replace(/\n/g,'<br>')+'</p>';}).join('')+'</div>';}
  else{d.innerHTML='<div class="bubble">'+esc(text)+'</div>';}
  thread.appendChild(d);thread.scrollTop=thread.scrollHeight;return d;}
-add('guide','Namaste. I am '+CFG.name+'. Speak freely, dear one - what weighs on your heart today?');
+function T(k){return (window.NITYA_T&&NITYA_T(k))||null;}
+function greetText(){var g=T('chat.greet')||'Namaste. I am {name}. Speak freely, dear one - what weighs on your heart today?';return g.split('{name}').join(CFG.name);}
+var greetEl=add('guide',greetText());
 var speakOn=false;
 var FEM=['female','heera','swara','neerja','aarohi','lekha','kalpana','pallavi','shruti','sapna','sobhana','tanishaa','dhwani','aditi','veena','meera','samantha','zira','ananya','rani'];
 var MAL=['male','ravi','prabhat','madhur','hemant','mohan','gagan','midhun','bashkar','manohar','niranjan','valluvar','arjun','rishi','kabir','bala'];
@@ -38,7 +40,26 @@ function speak(text){
   else{u.pitch=(CFG.gender==='f')?1.15:0.85;}
   u.rate=0.95;speechSynthesis.speak(u);}catch(e){}
 }
-if('speechSynthesis' in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){};}
+var fineEl=document.getElementById('chatfine');
+function fineText(){var f=T('chat.fine');if(f&&fineEl)fineEl.textContent=f.split('{name}').join(CFG.name).split('{texts}').join(CFG.texts);}
+function phText(){if(q.hasAttribute('data-i18n-ph'))return;var p=T('chat.ph_god');if(p)q.setAttribute('placeholder',p.split('{name}').join(CFG.name));}
+function syncLangSel(){var sl=window.NITYA_LANG?NITYA_LANG():'en';if(sl!=='en'&&langSel.querySelector('option[value="'+sl+'"]'))langSel.value=sl;}
+var langrow=document.querySelector('.langrow');
+var vnote=document.createElement('div');vnote.id='voicenote';vnote.className='voice-note';
+if(langrow&&langrow.parentNode)langrow.parentNode.insertBefore(vnote,langrow.nextSibling);
+function checkVoice(){if(!('speechSynthesis' in window)){vnote.textContent='';return;}
+ var code=SPEECH[langSel.value]||'en-IN';
+ var vs=speechSynthesis.getVoices();
+ var pool=vs.filter(function(x){return x.lang===code;});
+ if(!pool.length)pool=vs.filter(function(x){return x.lang&&x.lang.slice(0,2)===code.slice(0,2);});
+ if(!pool.length){var nm=(window.NITYA_NATIVE?NITYA_NATIVE(langSel.value):langSel.value);var s=T('chat.novoice')||'Your device has no {lang} voice - replies will be read in English (India).';vnote.textContent=s.split('{lang}').join(nm);}
+ else{vnote.textContent='';}}
+if('speechSynthesis' in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=checkVoice;}
+langSel.addEventListener('change',checkVoice);
+function applyLang(){fineText();phText();syncLangSel();checkVoice();
+ if(greetEl&&thread.children.length===1){var bb=greetEl.querySelector('.bubble');if(bb)bb.innerHTML=esc(clean(greetText()));}}
+window.addEventListener('nitya:lang',applyLang);
+applyLang();
 var pending=null;
 function ask(text){if(pending)return;add('user',text);
  pending=add('guide','');pending.querySelector('.bubble').innerHTML='<span class="dots"><i></i><i></i><i></i></span>';

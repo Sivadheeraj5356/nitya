@@ -17,8 +17,9 @@
 <body>
 <nav class="nav"><div class="wrap nav-in">
 <a class="wordmark" href="../../">Nitya Bhakti<span class="deva">नित्य भक्ति</span></a>
-<div class="nav-links"><a href="../../gita/">Gita</a><a href="../../mala/">Mala</a><a href="../../gods/" class="on">Gods</a><a href="../../stories/">Stories</a><a href="../../library/">Library</a><a href="../../festivals/">Festivals</a><a href="../../about/">About</a></div>
-<a class="nav-cta" href="../../gita/">Read the Gita</a>
+<div class="nav-links"><a href="../../gita/" data-i18n="nav.gita">Gita</a><a href="../../mala/" data-i18n="nav.mala">Mala</a><a href="../../gods/" class="on" data-i18n="nav.gods">Gods</a><a href="../../stories/" data-i18n="nav.stories">Stories</a><a href="../../library/" data-i18n="nav.library">Library</a><a href="../../festivals/" data-i18n="nav.festivals">Festivals</a><a href="../../about/" data-i18n="nav.about">About</a></div>
+<div class="langsel"><button id="langbtn" class="langbtn" type="button" aria-expanded="false" aria-label="Site language" aria-haspopup="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.9 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.9-3.8-9S9.5 5.7 12 3z"/></svg><span id="langcur">EN</span></button><div id="langpanel" class="langpanel" role="menu"></div></div>
+<a class="nav-cta" href="../../gita/" data-i18n="nav.cta">Read the Gita</a>
 </div></nav>
 
 <section class="pagehead wrap" style="padding-bottom:18px">
@@ -31,31 +32,32 @@
 <div class="langrow">
 <select id="langsel" aria-label="Answer language"><option value="auto">Auto - match my question</option><option value="en">English</option><option value="hi">हिन्दी</option><option value="ta">தமிழ்</option><option value="te">తెలుగు</option><option value="kn">ಕನ್ನಡ</option><option value="ml">മലയാളം</option><option value="bn">বাংলা</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="pa">ਪੰਜਾਬੀ</option><option value="or">ଓଡ଼ିଆ</option><option value="as">অসমীয়া</option><option value="ur">اردو</option><option value="sa">संस्कृतम्</option></select>
 <div class="voicebtns">
-<button type="button" id="spkbtn" class="vbtn" aria-pressed="false" title="Read answers aloud"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg> Voice</button>
+<button type="button" id="spkbtn" class="vbtn" aria-pressed="false" title="Read answers aloud"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg> <span data-i18n="chat.voice">Voice</span></button>
 </div>
 </div>
 <div class="thread" id="thread"></div>
-<div class="chips" id="chips"><button type="button">How do I deal with anxiety?</button><button type="button">What is my duty?</button><button type="button">How do I find peace of mind?</button><button type="button">How do I control anger?</button><button type="button">Why do bad things happen to good people?</button></div>
+<div class="chips" id="chips"><button type="button" data-i18n="chat.chip1">How do I deal with anxiety?</button><button type="button" data-i18n="chat.chip2">What is my duty?</button><button type="button" data-i18n="chat.chip3">How do I find peace of mind?</button><button type="button" data-i18n="chat.chip4">How do I control anger?</button><button type="button" data-i18n="chat.chip5">Why do bad things happen to good people?</button></div>
 <form class="askform" id="askform">
 <button type="button" id="micbtn" class="vbtn mic" title="Speak your question" aria-label="Speak your question"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg></button>
 <input id="askq" maxlength="600" placeholder="Speak to Murugan&hellip;" autocomplete="off" aria-label="Your question">
-<button class="btn btn-primary" type="submit">Ask</button>
+<button class="btn btn-primary" type="submit" data-i18n="chat.ask">Ask</button>
 </form>
 </div>
-<p class="chat-fine">Replies are AI-generated, spoken in Murugan's voice and grounded in the Skanda Purana and the Tiruppugazh. A devotional experience, not a replacement for a guru or tradition; bring heavy matters to people you trust. Voice works best in Chrome; Indian-language voices depend on your device. Your question is sent to our server to be answered; please do not share personal details.</p>
+<p class="chat-fine" id="chatfine">Replies are AI-generated, spoken in Murugan's voice and grounded in the Skanda Purana and the Tiruppugazh. A devotional experience, not a replacement for a guru or tradition; bring heavy matters to people you trust. Voice works best in Chrome; Indian-language voices depend on your device. Your question is sent to our server to be answered; please do not share personal details.</p>
 </div>
 
 <footer class="footer"><div class="wrap">
 <div class="cols">
 <div style="max-width:300px"><a class="wordmark" href="../../" style="font-size:1.15rem">Nitya Bhakti<span class="deva">नित्य भक्ति</span></a>
-<p style="margin-top:12px;color:var(--ink-3)">A quiet daily practice: the Bhagavad Gita, a chanting mala, and timeless mantras. Free, private, works offline.</p></div>
-<div><b>Practice</b><a href="../../">Today's verse</a><a href="../../mala/">Japa mala</a><a href="../../ask/">Ask Krishna</a><a href="../../gods/">Chat with the gods</a><a href="../../stories/">Stories of the gods</a></div>
-<div><b>Library</b><a href="../../hanuman-chalisa/">Hanuman Chalisa</a><a href="../../aarti/">Aarti library</a><a href="../../vishnu-sahasranamam/">Vishnu Sahasranamam</a><a href="../../mantras/">Mantra library</a><a href="../../festivals/">Festival calendar</a></div>
-<div><b>The Gita</b><a href="../../gita/">All 18 chapters</a><a href="../../themes/karma/">Verses on karma</a><a href="../../themes/peace/">Verses on peace</a><a href="../../themes/devotion/">Verses on devotion</a></div>
-<div><b>About</b><a href="../../about/">About Nitya Bhakti</a><a href="../../about/#sources">Sources</a><a href="../../about/#privacy">Privacy</a></div>
+<p style="margin-top:12px;color:var(--ink-3)" data-i18n="foot.tagline">A quiet daily practice: the Bhagavad Gita, a chanting mala, and timeless mantras. Free, private, works offline.</p></div>
+<div><b data-i18n="foot.practice">Practice</b><a href="../../" data-i18n="foot.today">Today's verse</a><a href="../../mala/" data-i18n="foot.mala">Japa mala</a><a href="../../ask/" data-i18n="foot.ask">Ask Krishna</a><a href="../../gods/" data-i18n="foot.chatgods">Chat with the gods</a><a href="../../stories/" data-i18n="foot.stories">Stories of the gods</a></div>
+<div><b data-i18n="foot.library">Library</b><a href="../../hanuman-chalisa/" data-i18n="foot.chalisa">Hanuman Chalisa</a><a href="../../aarti/" data-i18n="foot.aarti">Aarti library</a><a href="../../vishnu-sahasranamam/" data-i18n="foot.vs">Vishnu Sahasranamam</a><a href="../../mantras/" data-i18n="foot.mantra">Mantra library</a><a href="../../festivals/" data-i18n="foot.festcal">Festival calendar</a></div>
+<div><b data-i18n="foot.gita">The Gita</b><a href="../../gita/" data-i18n="foot.chapters">All 18 chapters</a><a href="../../themes/karma/" data-i18n="foot.karma">Verses on karma</a><a href="../../themes/peace/" data-i18n="foot.peace">Verses on peace</a><a href="../../themes/devotion/" data-i18n="foot.devotion">Verses on devotion</a></div>
+<div><b data-i18n="foot.about">About</b><a href="../../about/" data-i18n="foot.aboutnb">About Nitya Bhakti</a><a href="../../about/#sources" data-i18n="foot.sources">Sources</a><a href="../../about/#privacy" data-i18n="foot.privacy">Privacy</a></div>
 </div>
 <p class="fine" id="sources-note">Verse translations by Swami Sivananda (English) and Swami Ramsukhdas (Hindi), and verse recitations, via the open Gita Initiative dataset. Sanskrit text of the Bhagavad Gita is in the public domain. Deity images: temple photography from Wikimedia Commons under free licenses (credited with each image), plus two images shared by the site's founder. No generated images. Nitya Bhakti is a devotional study aid made with respect; it is not a substitute for guidance from a teacher or tradition.</p>
 </div></footer>
+<script src="../../i18n.js" defer></script>
 <script src="../../app.js" defer></script>
 <script>window.NITYA_ASK={"deity":"murugan","name":"Murugan","texts":"the Skanda Purana and the Tiruppugazh","img":"../../images/murugan.jpg","gender":"m"};</script><script src="../../chat.js" defer></script>
 </body></html>
