@@ -87,7 +87,16 @@
   }
 })();
 // PWA
-if ('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+  // when a new service worker takes over (e.g. after a site update), reload once so the fresh page shows
+  var _swr=false;
+  navigator.serviceWorker.addEventListener('controllerchange', function(){
+    if(_swr) return; _swr=true;
+    try{ if(sessionStorage.getItem('nitya-swr')) return; sessionStorage.setItem('nitya-swr','1'); }catch(e){}
+    location.reload();
+  });
+}
 // voice: recitation audio + speech
 (function(){
   var PLAY='<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>';
