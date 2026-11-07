@@ -18,7 +18,7 @@ function draw(v){
  x.fillStyle='#221E1A';x.font='30px Inter, sans-serif';
  wrap(x,v.en,840).forEach(function(ln){x.fillText(ln,cx,y);y+=44;});
  x.fillStyle='#A63A22';x.font='600 32px Fraunces, serif';
- x.fillText('Nitya',cx,H-96);
+ x.fillText('Nitya Bhakti',cx,H-96);
  x.fillStyle='#6B6255';x.font='24px Inter, sans-serif';
  x.fillText('sivadheeraj5356.github.io/nitya',cx,H-58);
  return c;

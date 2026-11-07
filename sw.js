@@ -1,4 +1,4 @@
-const C='nitya-v2';
+const C='nitya-bhakti-v1';
 const CORE=['./','./index.html','./style.css','./app.js','./daily.js','./share.js','./icon.svg','./mala/','./mantras/','./gita/','./about/'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
