@@ -206,3 +206,23 @@ a.vrow:hover{border-color:var(--ink-3)}
 
 .chatbox{max-width:100%}
 .thread{overflow-x:hidden}
+
+/* gods */
+.godgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:900px){.godgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.godgrid{grid-template-columns:1fr}}
+.godcard{border:1px solid var(--line-2);border-radius:20px;overflow:hidden;background:#fff;display:flex;flex-direction:column;transition:border-color .2s}
+.godcard:hover{border-color:var(--accent)}
+.godcard img{width:100%;aspect-ratio:4/4.6;object-fit:cover;object-position:top}
+.godbody{padding:18px 20px 20px}
+.godbody h3{font-family:var(--serif);font-weight:560;font-size:1.25rem;letter-spacing:-.01em;margin:0 0 6px}
+.godbody .gsa{font-family:var(--deva);font-size:.95rem;color:var(--ink-3);font-weight:400}
+.godbody p{font-size:.88rem;color:var(--ink-2);margin:0 0 12px;line-height:1.55}
+.godbody .go{font-size:.85rem;color:var(--accent);font-weight:500}
+.langrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 22px 0}
+.langrow select{font:inherit;font-size:.85rem;padding:8px 12px;border:1px solid var(--line-2);border-radius:99px;background:#fff;color:var(--ink)}
+.vbtn{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:.84rem;padding:8px 14px;border:1px solid var(--line-2);border-radius:99px;background:#fff;color:var(--ink-2);cursor:pointer}
+.vbtn.on{border-color:var(--accent);color:var(--accent)}
+.vbtn.mic{padding:10px;border-radius:50%;flex:none}
+.vbtn.mic.on{background:var(--accent);border-color:var(--accent);color:#FAF6EC}
+.askform{align-items:center}
