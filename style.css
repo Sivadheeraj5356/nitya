@@ -136,11 +136,11 @@ a.vrow:hover{border-color:var(--ink-3)}
 .darshan{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 @media(max-width:900px){.darshan{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.darshan{grid-template-columns:1fr 1fr;gap:12px}}
-.dframe{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;transition:transform .2s,box-shadow .2s}
+.dframe{min-width:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;transition:transform .2s,box-shadow .2s}
 .dframe:hover{transform:translateY(-3px);box-shadow:0 14px 34px -20px rgba(34,30,26,.28)}
 .dframe img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:9px}
 .dframe figcaption{padding:11px 4px 6px;font-size:.83rem;color:var(--ink-3);line-height:1.45}
-.dframe figcaption b{display:block;font-family:var(--serif);font-weight:560;font-size:1rem;color:var(--ink)}
+.dframe figcaption b{display:block;overflow-wrap:break-word;font-family:var(--serif);font-weight:560;font-size:1rem;color:var(--ink)}
 
 /* listen */
 .listen-btn{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-2);background:transparent;color:var(--ink);font:inherit;font-size:.88rem;font-weight:500;padding:9px 18px 9px 10px;border-radius:99px;cursor:pointer;transition:border-color .15s,background .15s}
