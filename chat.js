@@ -5,20 +5,37 @@ var LANGS=[['auto','Auto (match my question)'],['en','English'],['hi','हिन
 var SPEECH={en:'en-IN',hi:'hi-IN',ta:'ta-IN',te:'te-IN',kn:'kn-IN',ml:'ml-IN',bn:'bn-IN',mr:'mr-IN',gu:'gu-IN',pa:'pa-IN',or:'or-IN',as:'as-IN',ur:'ur-IN',sa:'sa-IN'};
 var thread=document.getElementById('thread'),form=document.getElementById('askform'),q=document.getElementById('askq'),chips=document.getElementById('chips'),langSel=document.getElementById('langsel'),mic=document.getElementById('micbtn'),spk=document.getElementById('spkbtn');
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function clean(t){return t.replace(/\*\*/g,'').replace(/\*/g,'').replace(/\x60/g,'').replace(/^#+\s*/gm,'').replace(/__/g,'').replace(/^\s*[-•]\s+/gm,'');}
 function add(role,text){var d=document.createElement('div');d.className='msg '+role;
- if(role==='guide'){d.innerHTML='<img class="avatar" src="'+CFG.img+'" alt=""><div class="bubble">'+esc(text).split(/\n\s*\n/).map(function(p){return '<p>'+p.replace(/\n/g,'<br>')+'</p>';}).join('')+'</div>';}
+ if(role==='guide'){d.innerHTML='<img class="avatar" src="'+CFG.img+'" alt=""><div class="bubble">'+esc(clean(text)).split(/\n\s*\n/).map(function(p){return '<p>'+p.replace(/\n/g,'<br>')+'</p>';}).join('')+'</div>';}
  else{d.innerHTML='<div class="bubble">'+esc(text)+'</div>';}
  thread.appendChild(d);thread.scrollTop=thread.scrollHeight;return d;}
-add('guide','Namaste. I am a humble guide who answers only through '+CFG.texts+'. What weighs on your mind today?');
+add('guide','Namaste. I am '+CFG.name+'. Speak freely, dear one - what weighs on your heart today?');
 var speakOn=false;
+var FEM=['female','heera','swara','neerja','aarohi','lekha','kalpana','pallavi','shruti','sapna','sobhana','tanishaa','dhwani','aditi','veena','meera','samantha','zira','ananya','rani'];
+var MAL=['male','ravi','prabhat','madhur','hemant','mohan','gagan','midhun','bashkar','manohar','niranjan','valluvar','arjun','rishi','kabir','bala'];
+function pickVoice(code,g){
+ var vs=speechSynthesis.getVoices();if(!vs.length)return null;
+ var pool=vs.filter(function(x){return x.lang===code;});
+ if(!pool.length)pool=vs.filter(function(x){return x.lang&&x.lang.slice(0,2)===code.slice(0,2);});
+ if(!pool.length)return null;
+ var hints=g==='f'?FEM:MAL,opp=g==='f'?MAL:FEM;
+ for(var i=0;i<hints.length;i++){var h=hints[i];
+  var v=pool.find(function(x){return x.name.toLowerCase().indexOf(h)>-1;});
+  if(v&&v.name.toLowerCase().indexOf('female')>-1&&g!=='f')continue;
+  if(v)return{voice:v,hinted:true};}
+ var neutral=pool.find(function(x){var n=x.name.toLowerCase();return opp.every(function(h2){return h2.length<4||n.indexOf(h2)===-1;});});
+ return{voice:neutral||pool[0],hinted:false};
+}
 function speak(text){
  if(!speakOn||!('speechSynthesis' in window))return;
  try{speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(text.replace(/\(.*?\)/g,''));
+  var u=new SpeechSynthesisUtterance(clean(text).replace(/\(.*?\)/g,''));
   var code=SPEECH[langSel.value]||'en-IN';
   u.lang=code;
-  var vs=speechSynthesis.getVoices(),v=vs.find(function(x){return x.lang===code;})||vs.find(function(x){return x.lang&&x.lang.slice(0,2)===code.slice(0,2);});
-  if(v)u.voice=v;
+  var pk=pickVoice(code,CFG.gender||'m');
+  if(pk&&pk.voice){u.voice=pk.voice;if(!pk.hinted)u.pitch=(CFG.gender==='f')?1.15:0.85;}
+  else{u.pitch=(CFG.gender==='f')?1.15:0.85;}
   u.rate=0.95;speechSynthesis.speak(u);}catch(e){}
 }
 if('speechSynthesis' in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){};}
