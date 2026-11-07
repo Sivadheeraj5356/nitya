@@ -1,7 +1,9 @@
-const C='nitya-bhakti-v2';
+const C='nitya-bhakti-v3';
 const CORE=['./','./index.html','./style.css','./app.js','./daily.js','./share.js','./icon.svg','./mala/','./mantras/','./gita/','./about/'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+// on takeover: drop every old cache, claim clients, then hard-reload every open tab
+// (old app.js has no controllerchange listener, so the SW must reload the tabs itself)
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()).then(()=>self.clients.matchAll({type:'window',includeUncontrolled:true})).then(cs=>Promise.all(cs.map(c=>c.navigate(c.url).catch(()=>{})))))});
 self.addEventListener('fetch',e=>{
  if(e.request.method!=='GET')return;
  // pages: network first, so new features (like the language menu) reach everyone; fall back to cache offline
