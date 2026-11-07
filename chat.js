@@ -67,8 +67,8 @@ function ask(text){if(pending)return;add('user',text);
  .then(function(r){return r.json();})
  .then(function(j){pending.remove();pending=null;
   if(j.answer){add('guide',j.answer);speak(j.answer);}
-  else{add('guide',j.error||'The guide is quiet right now. Please try again in a little while.');}})
- .catch(function(){pending.remove();pending=null;add('guide','The connection faltered. Please try again in a moment.');});}
+  else{add('guide',j.error||T('chat.err_quiet')||'The guide is quiet right now. Please try again in a little while.');}})
+ .catch(function(){pending.remove();pending=null;add('guide',T('chat.err_conn')||'The connection faltered. Please try again in a moment.');});}
 form.addEventListener('submit',function(e){e.preventDefault();var t=q.value.trim();if(!t)return;q.value='';ask(t);});
 chips.addEventListener('click',function(e){var b=e.target.closest('button');if(b)ask(b.textContent);});
 if(spk){spk.addEventListener('click',function(){speakOn=!speakOn;spk.classList.toggle('on',speakOn);spk.setAttribute('aria-pressed',speakOn);if(!speakOn&&'speechSynthesis' in window)speechSynthesis.cancel();});}
