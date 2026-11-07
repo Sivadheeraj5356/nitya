@@ -235,3 +235,25 @@ a.vrow:hover{border-color:var(--ink-3)}
 .storyhero img{width:100%;max-height:420px;object-fit:cover;object-position:top;border-radius:20px;border:1px solid var(--line-2)}
 .storytext{margin-top:22px}
 .storytext p{font-size:1.06rem;line-height:1.8;color:var(--ink);margin:0 0 20px}
+
+/* sacred library + festivals */
+.script-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px}
+.script-label{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.chips-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.deva-h{font-family:var(--deva);font-weight:400;color:var(--ink-3);font-size:.62em}
+.verse-flow{padding-bottom:20px}
+.hero-art img{border-radius:9px}
+.vs-verse{display:flex;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+.vs-num{font-family:var(--deva);color:var(--ink-3);min-width:2.4em;text-align:right;padding-top:2px}
+.vs-body{flex:1;min-width:0}
+.vs-sec-head{margin:38px 0 6px}
+.vs-sec-head h3{font-family:var(--serif);font-weight:560;font-size:1.3rem}
+.vs-sec-head p{color:var(--ink-2);margin-top:4px}
+.namavali-flow{line-height:2.1}
+.date-table{width:100%;border-collapse:collapse;margin:14px 0 26px}
+.date-table th,.date-table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:.98rem;vertical-align:top}
+.date-table th{font-family:var(--serif);font-weight:560;white-space:nowrap;color:var(--ink)}
+.date-table td{color:var(--ink-2);line-height:1.7}
+h3.fest-h{font-family:var(--serif);font-weight:560;font-size:1.25rem;margin:30px 0 4px;color:var(--ink)}
+.lede{color:var(--ink-2);max-width:620px;line-height:1.75;margin:0}
+.vrow .when{color:var(--accent);font-size:.86rem;margin-top:6px;font-weight:500}
