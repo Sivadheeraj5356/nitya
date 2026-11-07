@@ -1,0 +1,18 @@
+{
+  "name": "Nitya — a daily Gita practice",
+  "short_name": "Nitya",
+  "description": "The Bhagavad Gita, a chanting mala, and a mantra library. Free, private, offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F7F2E8",
+  "theme_color": "#F7F2E8",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
