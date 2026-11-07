@@ -29,16 +29,23 @@ function pickVoice(code,g){
  var neutral=pool.find(function(x){var n=x.name.toLowerCase();return opp.every(function(h2){return h2.length<4||n.indexOf(h2)===-1;});});
  return{voice:neutral||pool[0],hinted:false};
 }
+var srvT=null;
 function speak(text){
- if(!speakOn||!('speechSynthesis' in window))return;
- try{speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(clean(text).replace(/\(.*?\)/g,''));
+ if(!speakOn)return;
+ try{
+  if('speechSynthesis' in window)speechSynthesis.cancel();
+  if(srvT){srvT.cancel();srvT=null;}
   var code=SPEECH[langSel.value]||'en-IN';
-  u.lang=code;
-  var pk=pickVoice(code,CFG.gender||'m');
-  if(pk&&pk.voice){u.voice=pk.voice;if(!pk.hinted)u.pitch=(CFG.gender==='f')?1.15:0.85;}
-  else{u.pitch=(CFG.gender==='f')?1.15:0.85;}
-  u.rate=0.95;speechSynthesis.speak(u);}catch(e){}
+  var pk=('speechSynthesis' in window)?pickVoice(code,CFG.gender||'m'):null;
+  if(pk&&pk.voice){
+   var u=new SpeechSynthesisUtterance(clean(text).replace(/\(.*?\)/g,''));
+   u.lang=code;u.voice=pk.voice;if(!pk.hinted)u.pitch=(CFG.gender==='f')?1.15:0.85;
+   u.rate=0.95;speechSynthesis.speak(u);
+  }else if(window.NITYA_TTS_SPEAK){
+   // device has no voice for this language (e.g. Telugu in Brave): server voice
+   srvT=window.NITYA_TTS_SPEAK(clean(text).replace(/\(.*?\)/g,''),{gender:CFG.gender||'m',deity:CFG.name||''});
+  }
+ }catch(e){}
 }
 var fineEl=document.getElementById('chatfine');
 function fineText(){var f=T('chat.fine');if(f&&fineEl)fineEl.textContent=f.split('{name}').join(CFG.name).split('{texts}').join(CFG.texts);}
@@ -52,7 +59,7 @@ function checkVoice(){if(!('speechSynthesis' in window)){vnote.textContent='';re
  var vs=speechSynthesis.getVoices();
  var pool=vs.filter(function(x){return x.lang===code;});
  if(!pool.length)pool=vs.filter(function(x){return x.lang&&x.lang.slice(0,2)===code.slice(0,2);});
- if(!pool.length){var nm=(window.NITYA_NATIVE?NITYA_NATIVE(langSel.value):langSel.value);var s=T('chat.novoice')||'Your device has no {lang} voice - replies will be read in English (India).';vnote.textContent=s.split('{lang}').join(nm);}
+ if(!pool.length){var nm=(window.NITYA_NATIVE?NITYA_NATIVE(langSel.value):langSel.value);var s=T('chat.novoice')||'Your device has no {lang} voice - replies will be read in our server voice instead.';vnote.textContent=s.split('{lang}').join(nm);}
  else{vnote.textContent='';}}
 if('speechSynthesis' in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=checkVoice;}
 langSel.addEventListener('change',checkVoice);

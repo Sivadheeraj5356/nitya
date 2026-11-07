@@ -21,15 +21,15 @@
   var PLAY='<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>';
   var PAUSE='<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>';
   if (!('speechSynthesis' in window)) return;
-  var queue = [];
+  var queue = [], srv = null;
   function pickVoice(lang){
     var vs = speechSynthesis.getVoices();
     var pre = lang.split('-')[0].toLowerCase();
-    return vs.find(function(x){ return x.lang && x.lang.toLowerCase().indexOf(pre) === 0; })
-        || vs.find(function(x){ return x.lang && x.lang.toLowerCase().indexOf('hi') === 0; });
+    return vs.find(function(x){ return x.lang && x.lang.toLowerCase().indexOf(pre) === 0; });
   }
   function stopAll(){
     queue = [];
+    if (srv){ srv.cancel(); srv = null; }
     speechSynthesis.cancel();
     document.querySelectorAll('.listen-btn.playing').forEach(function(x){
       x.classList.remove('playing'); var i = x.querySelector('.lic'); if (i) i.innerHTML = PLAY;
@@ -38,9 +38,14 @@
   function speakNext(){
     var item = queue.shift();
     if (!item){ stopAll(); return; }
+    var v = pickVoice(item.lang);
+    if (!v && window.NITYA_TTS_SPEAK){
+      // no device voice for this language: use the server voice (Gemini TTS)
+      srv = window.NITYA_TTS_SPEAK(item.text, { gender: 'f', onend: function(){ srv = null; speakNext(); }, onerror: function(){ srv = null; speakNext(); } });
+      return;
+    }
     var u = new SpeechSynthesisUtterance(item.text);
     u.lang = item.lang; u.rate = .82;
-    var v = pickVoice(item.lang);
     if (v) u.voice = v;
     u.onend = function(){ speakNext(); };
     u.onerror = function(){ speakNext(); };

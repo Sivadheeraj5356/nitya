@@ -97,6 +97,32 @@ if ('serviceWorker' in navigator){
     location.reload();
   });
 }
+// server voice: used when the browser has no voice for the selected language.
+// NITYA_TTS_SPEAK(text, {lang, gender, deity, onstart, onend}) -> {cancel()} or null if it can't speak at all.
+window.NITYA_TTS_EP = 'https://nitya-ask.sivadheeraj5356.workers.dev/tts';
+window.NITYA_HAS_LOCAL_VOICE = function(code){
+  if (!('speechSynthesis' in window)) return false;
+  var vs = speechSynthesis.getVoices();
+  return vs.some(function(x){ return x.lang === code; }) || vs.some(function(x){ return x.lang && x.lang.slice(0,2) === String(code).slice(0,2); });
+};
+window.NITYA_TTS_SPEAK = function(text, opt){
+  opt = opt || {};
+  var cancelled = false, audio = null, xhr = new AbortController();
+  fetch(window.NITYA_TTS_EP, {
+    method: 'POST', headers: { 'content-type': 'application/json' }, signal: xhr.signal,
+    body: JSON.stringify({ text: String(text).slice(0, 1400), gender: opt.gender || 'f', deity: opt.deity || '' })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    if (cancelled) return;
+    if (j && j.audio){
+      audio = new Audio('data:audio/wav;base64,' + j.audio);
+      audio.addEventListener('ended', function(){ if (opt.onend) opt.onend(); });
+      audio.addEventListener('error', function(){ if (opt.onend) opt.onend(); });
+      if (opt.onstart) opt.onstart();
+      audio.play().catch(function(){ if (opt.onend) opt.onend(); });
+    } else if (opt.onerror) opt.onerror(j);
+  }).catch(function(e){ if (!cancelled && opt.onerror) opt.onerror(e); });
+  return { cancel: function(){ cancelled = true; xhr.abort(); if (audio){ audio.pause(); audio = null; } } };
+};
 // voice: recitation audio + speech
 (function(){
   var PLAY='<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>';
@@ -124,19 +150,26 @@ if ('serviceWorker' in navigator){
     var s = e.target.closest('[data-speak]');
     if (s){
       stopCur();
-      if (!('speechSynthesis' in window)) return;
+      if (!('speechSynthesis' in window) && !window.NITYA_TTS_SPEAK) return;
+      if (window.NITYA_SRVTTS){ window.NITYA_SRVTTS.cancel(); window.NITYA_SRVTTS = null; }
       if (s.classList.contains('playing')){ speechSynthesis.cancel(); s.classList.remove('playing'); var i2 = s.querySelector('.lic'); if (i2) i2.innerHTML = PLAY; return; }
       speechSynthesis.cancel();
       document.querySelectorAll('[data-speak].playing').forEach(function(x){ x.classList.remove('playing'); var xi = x.querySelector('.lic'); if (xi) xi.innerHTML = PLAY; });
-      var u = new SpeechSynthesisUtterance(s.getAttribute('data-speak'));
-      u.lang = 'hi-IN'; u.rate = .82;
-      var vs = speechSynthesis.getVoices();
+      var txt = s.getAttribute('data-speak');
+      var vs = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : [];
       var v = vs.find(function(x){ return x.lang && x.lang.toLowerCase().indexOf('hi') === 0; }) || vs.find(function(x){ return x.lang && x.lang.toLowerCase().indexOf('sa') === 0; });
-      if (v) u.voice = v;
       s.classList.add('playing');
       var ic2 = s.querySelector('.lic'); if (ic2) ic2.innerHTML = PAUSE;
-      u.onend = u.onerror = function(){ s.classList.remove('playing'); if (ic2) ic2.innerHTML = PLAY; };
-      speechSynthesis.speak(u);
+      var done = function(){ s.classList.remove('playing'); if (ic2) ic2.innerHTML = PLAY; };
+      if (v){
+        var u = new SpeechSynthesisUtterance(txt);
+        u.lang = 'hi-IN'; u.rate = .82; u.voice = v;
+        u.onend = u.onerror = done;
+        speechSynthesis.speak(u);
+      } else {
+        // no Hindi/Sanskrit device voice: server voice reads the Sanskrit
+        window.NITYA_SRVTTS = window.NITYA_TTS_SPEAK(txt, { gender: 'm', onend: function(){ window.NITYA_SRVTTS = null; done(); }, onerror: function(){ window.NITYA_SRVTTS = null; done(); } });
+      }
     }
   });
 })();
